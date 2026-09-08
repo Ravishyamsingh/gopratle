@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --page: #070b14;
+  --panel: #0d1321;
+  --panel-soft: #111a2b;
+  --border: #26334b;
+  --muted: #94a3b8;
+  --text: #f4f7fb;
+  --accent: #d7ff4f;
+  --accent-deep: #b7eb1f;
+  --danger: #fda4af;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--page); }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(120, 101, 255, .16), transparent 28rem),
+    radial-gradient(circle at 100% 30%, rgba(215, 255, 79, .08), transparent 23rem),
+    var(--page);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+
+.field {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: .7rem;
+  background: rgba(7, 11, 20, .65);
+  color: var(--text);
+  padding: .8rem .9rem;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(215, 255, 79, .12); }
+.field::placeholder { color: #64748b; }
+.field option { background: #0d1321; }
+
+.field-label { display: block; margin-bottom: .45rem; color: #dbe4f0; font-size: .88rem; font-weight: 650; }
+.field-error { margin-top: .35rem; color: var(--danger); font-size: .78rem; }
+
+.focus-ring:focus-visible { outline: 3px solid rgba(215, 255, 79, .5); outline-offset: 2px; }
