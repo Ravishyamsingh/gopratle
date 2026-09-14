@@ -1,124 +1,232 @@
 # GoPratle Requirement Posting Flow
 
-A small full-stack monorepo for event hosts to post a requirement for an **Event Planner**, **Performer**, or **Crew**. It uses a four-step Next.js wizard and persists each submission to one MongoDB `requirements` collection using Mongoose discriminators.
+[![Next.js](https://img.shields.io/badge/Next.js-16.3.4-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react&logoColor=111827)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.2-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.17-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![React Hook Form](https://img.shields.io/badge/React_Hook_Form-7.54.2-EC5990?logo=reacthookform&logoColor=white)](https://react-hook-form.com/)
+[![Zod](https://img.shields.io/badge/Zod-3.24.2-3E67B1)](https://zod.dev/)
+[![Axios](https://img.shields.io/badge/Axios-1.8.4-5A29E4?logo=axios&logoColor=white)](https://axios-http.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5.1.0-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![Mongoose](https://img.shields.io/badge/Mongoose-8.18.0-880000)](https://mongoosejs.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-database-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Netlify](https://img.shields.io/badge/Frontend-Netlify-00C7B7?logo=netlify&logoColor=white)](https://www.netlify.com/)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=111827)](https://render.com/)
 
-## Stack
+A full-stack requirement posting flow for event hosts. Users can describe an event, choose whether they need an **Event Planner**, **Performer**, or **Crew**, review the details, and submit the requirement to MongoDB.
 
-- `frontend/` — Next.js 16 App Router, TypeScript, Tailwind CSS, React Hook Form, Zod, Axios
-- `backend/` — Node.js, Express 5, Mongoose
-- MongoDB Atlas — data store (connection string supplied via environment variable)
+## Live Demo
 
-## Project structure
+- **Frontend:** [gopratles.netlify.app](https://gopratles.netlify.app/post-requirement?step=1)
+- **Backend health:** [gopratle-s8ge.onrender.com/api/health](https://gopratle-s8ge.onrender.com/api/health)
 
+The deployed API health check returns:
+
+```json
+{
+   "success": true,
+   "status": "ok"
+}
 ```
-frontend/
-  app/post-requirement/       # URL-driven four-step form
-  components/wizard/          # individual wizard steps and UI
-  lib/validation.ts           # Zod category and step schemas
-  lib/api.ts                  # Axios API client
-backend/
-  src/models/                 # base Requirement + three discriminators
-  src/controllers/            # create, list and get logic
-  src/routes/                 # /api/requirements routes
+
+## Screenshots
+
+### Homepage / Event Basics
+
+![GoPratle homepage and event basics form](homepage.png)
+
+### Details and Review Page
+
+![GoPratle requirement details and review page](details-page.png)
+
+### Successful Submission Page
+
+![GoPratle successful requirement submission page](submit-page.png)
+
+## Features
+
+- Four-step requirement wizard with URL-driven navigation
+- Event basics: name, type, date or date range, location, and venue
+- Category-specific forms for planners, performers, and crew
+- Client-side validation with Zod and React Hook Form
+- Server-side validation with Mongoose schemas
+- Review screen before submission
+- Submission confirmation with the created MongoDB document ID
+- REST API with health, create, list, filter, and detail endpoints
+- Mongoose discriminators in one shared `requirements` collection
+- Responsive dark host-portal interface
+
+## Technology Stack
+
+### Frontend
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- React Hook Form
+- Zod
+- Axios
+
+### Backend
+
+- Node.js
+- Express 5
+- Mongoose 8
+- MongoDB Atlas
+- CORS
+- dotenv
+
+### Deployment and tooling
+
+- Netlify for the Next.js frontend
+- Render for the Express API
+- GitHub for source control and continuous deployment
+- npm workspaces for the monorepo
+- Node.js built-in test runner for backend tests
+
+## Project Structure
+
+```text
+.
+├── backend/
+│   ├── src/
+│   │   ├── config/           # MongoDB connection
+│   │   ├── controllers/      # Requirement request handlers
+│   │   ├── models/           # Base model and category discriminators
+│   │   └── routes/           # Express API routes
+│   └── test/                 # Backend validation tests
+├── frontend/
+│   ├── app/                  # Next.js routes and global styles
+│   ├── components/wizard/    # Wizard steps and shared UI
+│   └── lib/                  # API client, types, and validation
+├── homepage.png              # Event basics screenshot
+├── details-page.png          # Review screenshot
+├── submit-page.png           # Successful submission screenshot
+├── netlify.toml              # Netlify build configuration
+└── render.yaml               # Render backend configuration
 ```
 
-## Local setup
+## Local Development
 
-1. Install Node.js 20.9 or newer, then install both workspaces from the repository root:
+### Requirements
 
-   ```bash
-   npm install
-   ```
+- Node.js 20.9 or newer
+- npm
+- MongoDB Atlas account or a local MongoDB instance
 
-2. Create `backend/.env` from `backend/.env.example` and provide your Atlas URI:
+### Install
 
-   ```env
-   MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>/gopratle?retryWrites=true&w=majority
-   CORS_ORIGIN=http://localhost:3000
-   PORT=5000
-   ```
+```bash
+npm install
+```
 
-3. Create `frontend/.env.local` from `frontend/.env.local.example`:
+Create `backend/.env` from `backend/.env.example`:
 
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
-   ```
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>/<database>?retryWrites=true&w=majority
+CORS_ORIGIN=http://localhost:3000
+PORT=5000
+```
 
-4. Start both applications:
+Create `frontend/.env.local` from `frontend/.env.local.example`:
 
-   ```bash
-   npm run dev
-   ```
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
 
-   The web app is at `http://localhost:3000/post-requirement?step=1`; the API is at `http://localhost:5000`.
+Environment files are ignored by Git. Never commit real credentials or connection strings.
 
-## API quick test
+### Run the applications
 
-Check the API first:
+```bash
+npm run dev
+```
+
+- Frontend: `http://localhost:3000/post-requirement?step=1`
+- Backend: `http://localhost:5000`
+
+## API
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/health` | Check API availability |
+| `POST` | `/api/requirements` | Create a planner, performer, or crew requirement |
+| `GET` | `/api/requirements` | List requirements, newest first |
+| `GET` | `/api/requirements?category=performer` | Filter requirements by category |
+| `GET` | `/api/requirements/:id` | Retrieve one requirement |
+
+Quick health check:
 
 ```bash
 curl http://localhost:5000/api/health
 ```
 
-Create a performer requirement:
+## Tests and Verification
 
-```bash
-curl -X POST http://localhost:5000/api/requirements \
-  -H "Content-Type: application/json" \
-  -d "{\"category\":\"performer\",\"eventName\":\"Rahul's Sangeet\",\"eventType\":\"Wedding\",\"dateType\":\"single\",\"startDate\":\"2026-11-14\",\"location\":\"Chennai\",\"venue\":\"Taj Club House\",\"performerType\":\"Live Band\",\"performanceDuration\":\"1–2 hrs\",\"audienceSize\":150,\"budgetRange\":\"₹1L–5L\"}"
-```
-
-Available endpoints:
-
-- `POST /api/requirements` — accepts a `category` of `planner`, `performer`, or `crew`; returns `201` on success and `400` validation errors.
-- `GET /api/requirements` — lists every requirement, newest first.
-- `GET /api/requirements?category=performer` — lists one category.
-- `GET /api/requirements/:id` — returns one requirement.
-
-All types share the `requirements` MongoDB collection. The base `Requirement` model has `category` as its discriminator key, so planner, performer, and crew-specific fields remain clearly separated without separate collections.
-
-## Verification
+Backend tests cover the Mongoose discriminator models and category-specific validation rules.
 
 ```bash
 npm test
-npm run build --workspace frontend
 ```
 
-The backend test suite covers Mongoose discriminator and validation behavior. The frontend production build includes TypeScript validation.
+Result:
+
+```text
+ℹ tests 3
+ℹ pass 3
+ℹ fail 0
+```
+
+Build the production frontend:
+
+```bash
+npm run build
+```
+
+The production build completes successfully with TypeScript checking and static route generation.
 
 ## Deployment
 
-### Atlas
+### MongoDB Atlas
 
-1. Create a free MongoDB Atlas M0 cluster.
-2. Create a database user and add its credentials to the connection string.
-3. For this take-home, allow network access for the deployment hosts (Atlas IP allowlist `0.0.0.0/0` is the simple option; restrict it for a real application).
-4. Set the resulting connection string as `MONGODB_URI` in Render.
+1. Create a MongoDB Atlas cluster and database user.
+2. Add the deployment network access required by Render.
+3. Add the Atlas connection string to Render as `MONGODB_URI`.
 
-### Render (backend)
+### Render API
 
-Create a Web Service using the `render.yaml` Blueprint, or configure a Web Service manually with the `backend` directory as the root directory.
+The included `render.yaml` configures the backend service. For a manual Render service, use:
 
-- Build command: `npm install`
-- Start command: `npm start`
-- Environment: `MONGODB_URI`, `CORS_ORIGIN`, and optional `PORT` (Render provides its own port)
-
-Set `CORS_ORIGIN` to the final Netlify frontend URL, for example `https://your-app.netlify.app`. Multiple comma-separated origins are supported for preview/local use.
-
-### Netlify (frontend)
-
-Import the same repository. The included `netlify.toml` builds the `frontend` workspace from the repository root. Add this environment variable in Netlify:
-
-```env
-NEXT_PUBLIC_API_URL=https://gopratle-api.onrender.com/api
+```text
+Root directory: backend
+Build command: npm install
+Start command: npm start
 ```
 
-Redeploy after adding or changing this variable, as `NEXT_PUBLIC_*` values are compiled into the browser bundle.
+Set these Render environment variables:
 
-## Still to do manually
+```env
+MONGODB_URI=<your MongoDB Atlas connection string>
+CORS_ORIGIN=https://gopratles.netlify.app
+```
 
-- Create/configure the Atlas cluster and put the real URI in `backend/.env` (and Render).
-- Deploy the backend to Render and set its production CORS origin.
-- Deploy the frontend to Netlify with the Render URL in `NEXT_PUBLIC_API_URL`.
-- Smoke-test the deployed flow, then record the requested 5–7 minute demo.
-# gopratle
+Do not set `CORS_ORIGIN` to the frontend path or include `/api`. Render supplies `PORT` automatically.
+
+### Netlify frontend
+
+The included `netlify.toml` builds the frontend workspace from the repository root. Set this Netlify environment variable for the production context:
+
+```env
+NEXT_PUBLIC_API_URL=https://gopratle-s8ge.onrender.com/api
+```
+
+Redeploy after changing this value because `NEXT_PUBLIC_*` variables are compiled into the browser bundle.
+
+## Security
+
+- Real `.env` and `.env.local` files are ignored by Git.
+- Local `AGENTS.md`, `CLAUDE.md`, and the PRD are ignored as repository-local files.
+- Never expose `MONGODB_URI` in screenshots, commits, logs, or public documentation.
+- Rotate the MongoDB password immediately if the connection string is exposed.
