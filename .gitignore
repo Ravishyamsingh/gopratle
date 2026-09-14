@@ -2,7 +2,13 @@ node_modules/
 .next/
 coverage/
 .env
+.env.*
+!.env.example
+!.env.local.example
 .env.local
 *.log
 .env*
 dist/
+**/AGENTS.md
+**/CLAUDE.md
+gopratle-requirement-posting-flow-prd.md

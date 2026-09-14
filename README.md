@@ -97,20 +97,20 @@ The backend test suite covers Mongoose discriminator and validation behavior. Th
 
 ### Render (backend)
 
-Create a Web Service using the `backend` directory as the root directory.
+Create a Web Service using the `render.yaml` Blueprint, or configure a Web Service manually with the `backend` directory as the root directory.
 
 - Build command: `npm install`
 - Start command: `npm start`
 - Environment: `MONGODB_URI`, `CORS_ORIGIN`, and optional `PORT` (Render provides its own port)
 
-Set `CORS_ORIGIN` to the final Vercel frontend URL, for example `https://your-app.vercel.app`. Multiple comma-separated origins are supported for preview/local use.
+Set `CORS_ORIGIN` to the final Netlify frontend URL, for example `https://your-app.netlify.app`. Multiple comma-separated origins are supported for preview/local use.
 
-### Vercel (frontend)
+### Netlify (frontend)
 
-Import the same repository and set `frontend` as the root directory. Add:
+Import the same repository. The included `netlify.toml` builds the `frontend` workspace from the repository root. Add this environment variable in Netlify:
 
 ```env
-NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com/api
+NEXT_PUBLIC_API_URL=https://gopratle-api.onrender.com/api
 ```
 
 Redeploy after adding or changing this variable, as `NEXT_PUBLIC_*` values are compiled into the browser bundle.
@@ -119,6 +119,6 @@ Redeploy after adding or changing this variable, as `NEXT_PUBLIC_*` values are c
 
 - Create/configure the Atlas cluster and put the real URI in `backend/.env` (and Render).
 - Deploy the backend to Render and set its production CORS origin.
-- Deploy the frontend to Vercel with the Render URL in `NEXT_PUBLIC_API_URL`.
+- Deploy the frontend to Netlify with the Render URL in `NEXT_PUBLIC_API_URL`.
 - Smoke-test the deployed flow, then record the requested 5–7 minute demo.
 # gopratle
