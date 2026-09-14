@@ -29,7 +29,13 @@ export async function postRequirement(payload: RequirementFormValues) {
 
 export function getApiErrorMessage(error: unknown) {
   if (axios.isAxiosError(error)) {
-    const message = error.response?.data?.message;
+    const data = error.response?.data as { message?: unknown; errors?: Array<{ field?: string; message?: string }> } | undefined;
+    const message = data?.message;
+    const fieldErrors = data?.errors
+      ?.map((item) => item.field && item.message ? `${item.field}: ${item.message}` : item.message)
+      .filter((item): item is string => Boolean(item));
+
+    if (fieldErrors?.length) return `${typeof message === 'string' ? message : 'Validation failed.'} ${fieldErrors.join(' ')}`;
     if (typeof message === 'string') return message;
     const errMsg = error.message;
     if (errMsg && errMsg !== 'Network Error') return errMsg;

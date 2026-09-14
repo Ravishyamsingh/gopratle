@@ -18,35 +18,30 @@ function formatValidationError(error) {
 }
 
 async function createRequirement(req, res, next) {
-  const session = await mongoose.startSession();
-  
   try {
-    await session.withTransaction(async () => {
-      const { category } = req.body;
-      const RequirementModel = requirementModels[category];
+    const { category } = req.body;
+    const RequirementModel = requirementModels[category];
 
-      if (!RequirementModel) {
-        return res.status(400).json({
-          success: false,
-          message: 'category must be planner, performer, or crew.',
-        });
-      }
+    if (!RequirementModel) {
+      return res.status(400).json({
+        success: false,
+        message: 'category must be planner, performer, or crew.',
+      });
+    }
 
-      const sanitizedBody = {
-        ...req.body,
-        eventName: req.body.eventName?.trim(),
-        location: req.body.location?.trim(),
-        venue: req.body.venue?.trim() || undefined,
-        stylePreference: req.body.stylePreference?.trim() || undefined,
-        genrePreference: req.body.genrePreference?.trim() || undefined,
-        additionalNotes: req.body.additionalNotes?.trim() || undefined,
-      };
+    const sanitizedBody = {
+      ...req.body,
+      eventName: req.body.eventName?.trim(),
+      location: req.body.location?.trim(),
+      venue: req.body.venue?.trim() || undefined,
+      stylePreference: req.body.stylePreference?.trim() || undefined,
+      genrePreference: req.body.genrePreference?.trim() || undefined,
+      additionalNotes: req.body.additionalNotes?.trim() || undefined,
+    };
 
-      const requirement = await RequirementModel.create(sanitizedBody, { session });
-      return res.status(201).json({ success: true, data: requirement });
-    });
-    
-    return res.status(200); // Successful transaction
+    const requirement = new RequirementModel(sanitizedBody);
+    await requirement.save();
+    return res.status(201).json({ success: true, data: requirement });
   } catch (error) {
     if (error.name === 'ValidationError' || error.name === 'CastError') {
       return res.status(400).json({
@@ -56,8 +51,6 @@ async function createRequirement(req, res, next) {
       });
     }
     return next(error);
-  } finally {
-    await session.endSession();
   }
 }
 
